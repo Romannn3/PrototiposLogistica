@@ -1,4 +1,4 @@
-# Shipping Manager Demo
+# Logistica Demo
 
 Sistema de gestión de envíos y pedidos - Proyecto de demostración para portafolio.
 
@@ -36,42 +36,12 @@ Dashboard con alertas automáticas de vencimiento (30 días) para:
 | CI/CD | GitHub Actions |
 | Deploy | Vercel |
 
-## 📦 Instalación
 
-```bash
-# Clonar repositorio
-git clone <repo-url>
-cd shipping_demo
-
-# Entorno virtual
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-# Dependencias
-pip install -r requirements.txt
-
-# Configurar
-cp .env.example .env
-# Editar .env con tus valores
-
-# Inicializar BD
-python setup_db.py
-
-# Ejecutar
-python run.py
 ```
 
 **Demo Login:** `admin` / `admin123`
 
-## 🧪 Testing
 
-```bash
-# Ejecutar tests
-pytest
-
-# Con cobertura
-pytest --cov=app
 ```
 
 ## 📁 Estructura
@@ -100,6 +70,3 @@ tests/
 - **Factory Pattern** - CSV handler selection
 - **Decorator Pattern** - RBAC (`@role_required`)
 
-## 📄 Licencia
-
-MIT License
