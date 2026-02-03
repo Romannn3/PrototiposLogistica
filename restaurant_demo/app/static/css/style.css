@@ -1,0 +1,62 @@
+:root {
+    --primary-color: #0d6efd;
+    --dark-bg: #1a1a2e;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    transition: background-color 0.2s ease;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.btn {
+    transition: all 0.2s ease;
+}
+
+.bg-opacity-10 {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+footer {
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+}

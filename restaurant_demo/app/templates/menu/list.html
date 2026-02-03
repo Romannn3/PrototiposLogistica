@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Menú - Restaurant Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-book me-2"></i>Menú</h1>
+        <p class="text-muted">Gestión de platos y categorías</p>
+    </div>
+    <div class="col-auto">
+        {% if current_user.is_admin or current_user.rol == 'encargado' %}
+        <a href="{{ url_for('menu.create_plato') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Plato
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% for categoria in categorias %}
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">{{ categoria.nombre }}</h5>
+        {% if categoria.descripcion %}
+        <small class="text-white-50">{{ categoria.descripcion }}</small>
+        {% endif %}
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Plato</th>
+                        <th>Descripción</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-center">Disponible</th>
+                        {% if current_user.is_admin or current_user.rol == 'encargado' %}
+                        <th class="text-center">Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plato in categoria.platos %}
+                    <tr class="{{ 'table-secondary' if not plato.disponible }}">
+                        <td class="fw-bold">{{ plato.nombre }}</td>
+                        <td class="text-muted">{{ plato.descripcion or '-' }}</td>
+                        <td class="text-end">${{ "%.2f"|format(plato.precio) }}</td>
+                        <td class="text-center">
+                            {% if plato.disponible %}
+                            <span class="badge bg-success"><i class="bi bi-check"></i></span>
+                            {% else %}
+                            <span class="badge bg-danger"><i class="bi bi-x"></i></span>
+                            {% endif %}
+                        </td>
+                        {% if current_user.is_admin or current_user.rol == 'encargado' %}
+                        <td class="text-center">
+                            <a href="{{ url_for('menu.edit_plato', id=plato.id) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{{ url_for('menu.delete_plato', id=plato.id) }}" method="POST"
+                                class="d-inline" onsubmit="return confirm('¿Eliminar este plato?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">No hay platos en esta categoría</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>No hay categorías creadas.
+    {% if current_user.is_admin %}
+    Ejecute el script de setup para poblar datos iniciales.
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

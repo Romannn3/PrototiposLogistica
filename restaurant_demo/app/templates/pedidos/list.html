@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedidos - Restaurant Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-receipt me-2"></i>Pedidos Activos</h1>
+        <p class="text-muted">Gestión de pedidos en curso</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('pedidos.create_pedido') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Pedido
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for pedido in pedidos %}
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div
+                class="card-header bg-{{ pedido.estado.color }} text-white d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-table me-2"></i>Mesa {{ pedido.mesa.numero }}</span>
+                <span class="badge bg-white text-{{ pedido.estado.color }}">{{ pedido.estado.nombre }}</span>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-2">
+                    <i class="bi bi-clock me-1"></i>{{ pedido.fecha.strftime('%H:%M') }}
+                    {% if pedido.mozo %}
+                    | <i class="bi bi-person me-1"></i>{{ pedido.mozo.nombre }}
+                    {% endif %}
+                </p>
+
+                <ul class="list-unstyled mb-3">
+                    {% for item in pedido.items[:3] %}
+                    <li>
+                        <span class="badge bg-secondary me-1">{{ item.cantidad }}</span>
+                        {{ item.plato.nombre }}
+                    </li>
+                    {% endfor %}
+                    {% if pedido.items|length > 3 %}
+                    <li class="text-muted small">... y {{ pedido.items|length - 3 }} más</li>
+                    {% endif %}
+                </ul>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong class="text-success fs-5">${{ "%.2f"|format(pedido.total) }}</strong>
+                    <a href="{{ url_for('pedidos.view_pedido', id=pedido.id) }}" class="btn btn-sm btn-outline-primary">
+                        Ver Detalle <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i>No hay pedidos activos en este momento.
+            <a href="{{ url_for('pedidos.create_pedido') }}">Crear uno nuevo</a>.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

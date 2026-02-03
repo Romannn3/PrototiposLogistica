@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedido #{{ pedido.id }} - Restaurant Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>
+            <i class="bi bi-receipt me-2"></i>Pedido #{{ pedido.id }}
+            <span class="badge bg-{{ pedido.estado.color }} fs-6">{{ pedido.estado.nombre }}</span>
+        </h1>
+        <p class="text-muted">
+            Mesa {{ pedido.mesa.numero }} | {{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}
+            {% if pedido.mozo %} | Mozo: {{ pedido.mozo.nombre }} {{ pedido.mozo.apellido }}{% endif %}
+        </p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('pedidos.list_pedidos') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Items del Pedido -->
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Items del Pedido</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Plato</th>
+                            <th>Notas</th>
+                            <th class="text-end">Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.items %}
+                        <tr>
+                            <td><span class="badge bg-secondary">{{ item.cantidad }}</span></td>
+                            <td class="fw-bold">{{ item.plato.nombre }}</td>
+                            <td class="text-muted small">{{ item.notas or '-' }}</td>
+                            <td class="text-end">${{ "%.2f"|format(item.subtotal) }}</td>
+                            <td class="text-end">
+                                <form action="{{ url_for('pedidos.delete_item', item_id=item.id) }}" method="POST"
+                                    class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('¿Eliminar este item?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-3">No hay items en este pedido</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">TOTAL:</td>
+                            <td class="text-end fw-bold text-success fs-5">${{ "%.2f"|format(pedido.total) }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Agregar Item -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Agregar Item</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('pedidos.add_item', id=pedido.id) }}" method="POST">
+                    {{ item_form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            {{ item_form.id_plato(class="form-select") }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ item_form.cantidad(class="form-control", placeholder="Cant.") }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ item_form.notas(class="form-control", placeholder="Notas...") }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ item_form.submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar: Estado y Acciones -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-arrow-repeat me-2"></i>Cambiar Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% for estado in estados %}
+                    {% if estado.id != pedido.id_estado %}
+                    <form action="{{ url_for('pedidos.update_estado', id=pedido.id, estado_id=estado.id) }}"
+                        method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-outline-{{ estado.color }} w-100">
+                            {{ estado.nombre }}
+                        </button>
+                    </form>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if pedido.notas %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-chat-text me-2"></i>Notas</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ pedido.notas }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

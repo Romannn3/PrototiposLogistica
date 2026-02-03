@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedido #{{ pedido.id }} - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Pedido #{{ pedido.id }} <span class="badge bg-{{ pedido.estado.color }}">{{ pedido.estado.nombre }}</span>
+        </h1>
+        <p class="text-muted">Cliente: {{ pedido.cliente.nombre }}</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('pedidos.list_pedidos') }}" class="btn btn-outline-secondary"><i
+                class="bi bi-arrow-left"></i> Volver</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Items del Pedido</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.items %}
+                        <tr>
+                            <td>{{ item.producto.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.unidad }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-3">No hay items</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Agregar Item</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('pedidos.add_item', id=pedido.id) }}" method="POST">
+                    {{ item_form.hidden_tag() }}
+                    <div class="row g-2">
+                        <div class="col-md-5">{{ item_form.id_producto(class="form-select") }}</div>
+                        <div class="col-md-2">{{ item_form.cantidad(class="form-control", placeholder="Cant.") }}</div>
+                        <div class="col-md-3">{{ item_form.unidad(class="form-control", placeholder="Unidad") }}</div>
+                        <div class="col-md-2">{{ item_form.submit(class="btn btn-primary w-100") }}</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Detalles</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Fecha:</dt>
+                    <dd class="col-7">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</dd>
+                    <dt class="col-5">Entrega:</dt>
+                    <dd class="col-7">{{ pedido.fecha_entrega.strftime('%d/%m/%Y') if pedido.fecha_entrega else '-' }}
+                    </dd>
+                    <dt class="col-5">Lugar:</dt>
+                    <dd class="col-7">{{ pedido.lugar_entrega or '-' }}</dd>
+                </dl>
+                {% if pedido.comentarios %}
+                <hr>
+                <p class="mb-0"><small class="text-muted">{{ pedido.comentarios }}</small></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Cambiar Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% for estado in estados if estado.id != pedido.id_estado %}
+                    <form action="{{ url_for('pedidos.update_estado', id=pedido.id, estado_id=estado.id) }}"
+                        method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-{{ estado.color }} w-100">{{ estado.nombre }}</button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

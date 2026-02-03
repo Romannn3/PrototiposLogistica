@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Envío - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Nuevo Envío</h1>
+    </div>
+</div>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Seleccionar Pedidos</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Entrega</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in pedidos %}
+                            <tr>
+                                <td><input type="checkbox" name="pedidos" value="{{ p.id }}"></td>
+                                <td>#{{ p.id }}</td>
+                                <td>{{ p.cliente.nombre }}</td>
+                                <td>{{ p.fecha_entrega.strftime('%d/%m') if p.fecha_entrega else '-' }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No hay pedidos disponibles</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Asignar Recursos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Chofer</label>
+                        <select name="chofer" class="form-select">
+                            <option value="">-- Sin asignar --</option>
+                            {% for c in choferes %}
+                            <option value="{{ c.id }}">{{ c.nombre }} {{ c.apellido }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vehículo</label>
+                        <select name="vehiculo" class="form-select">
+                            <option value="">-- Sin asignar --</option>
+                            {% for v in vehiculos %}
+                            <option value="{{ v.id }}">{{ v.patente }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Crear Envío</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.getElementById('select-all').addEventListener('change', function () {
+        document.querySelectorAll('input[name="pedidos"]').forEach(cb => cb.checked = this.checked);
+    });
+</script>
+{% endblock %}

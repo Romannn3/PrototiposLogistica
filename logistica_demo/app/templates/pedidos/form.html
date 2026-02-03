@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Pedido - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Nuevo Pedido</h1>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.id_cliente.label(class="form-label") }}
+                        {{ form.id_cliente(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.fecha_entrega.label(class="form-label") }}
+                        {{ form.fecha_entrega(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.lugar_entrega.label(class="form-label") }}
+                        {{ form.lugar_entrega(class="form-control") }}
+                    </div>
+                    <div class="mb-4">
+                        {{ form.comentarios.label(class="form-label") }}
+                        {{ form.comentarios(class="form-control", rows=3) }}
+                    </div>
+                    <div class="d-flex gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('pedidos.list_pedidos') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Pedido desde Mensaje - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-chat-dots me-2"></i>Crear Pedido desde Mensaje</h1>
+        <p class="text-muted">Pegue el mensaje y el sistema extraerá la información usando expresiones regulares.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Mensaje Original</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="mensaje-form">
+                    {{ form.hidden_tag() }}
+                    {{ form.mensaje(class="form-control font-monospace", style="min-height: 250px;") }}
+
+                    <div class="d-flex gap-2 mt-3">
+                        {{ form.submit(class="btn btn-outline-primary") }}
+                        {% if parsed_data %}
+                        <button type="submit" name="confirmar" value="1" class="btn btn-success">
+                            <i class="bi bi-check-lg me-1"></i>Confirmar y Crear
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Formato Esperado</h5>
+            </div>
+            <div class="card-body">
+                <pre class="bg-light p-3 rounded mb-0"><code>📅 Día: hoy
+👤 Cliente: Juan Pérez
+📦 Productos: 
+100 kg de Harina
+50 litros de Aceite
+20 unidades de Bolsas
+📍 Lugar de entrega: Av. Siempreviva 742
+Comentario: entregar por la mañana</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-cpu me-2"></i>Datos Extraídos (Regex)</h5>
+            </div>
+            <div class="card-body" id="parsed-result">
+                {% if parsed_data %}
+                <dl class="row mb-0">
+                    <dt class="col-4">Día:</dt>
+                    <dd class="col-8">{{ parsed_data.dia or '-' }}</dd>
+
+                    <dt class="col-4">Cliente:</dt>
+                    <dd class="col-8">{{ parsed_data.cliente or '-' }}</dd>
+
+                    <dt class="col-4">Lugar Entrega:</dt>
+                    <dd class="col-8">{{ parsed_data.lugar_entrega or '-' }}</dd>
+
+                    <dt class="col-4">Comentario:</dt>
+                    <dd class="col-8">{{ parsed_data.comentario or '-' }}</dd>
+                </dl>
+
+                <h6 class="mt-3">Productos detectados:</h6>
+                {% if parsed_data.productos %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                            <th>Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in parsed_data.productos %}
+                        <tr>
+                            <td>{{ p.cantidad }}</td>
+                            <td>{{ p.unidad }}</td>
+                            <td>{{ p.nombre }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No se detectaron productos</p>
+                {% endif %}
+                {% else %}
+                <p class="text-muted text-center py-5">
+                    <i class="bi bi-arrow-left me-2"></i>Ingrese un mensaje y presione "Procesar"
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

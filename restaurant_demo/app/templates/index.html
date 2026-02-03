@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Restaurant Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-speedometer2 me-2"></i>Dashboard</h1>
+        <p class="text-muted">Resumen de operaciones del día</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-primary bg-opacity-10 p-3 rounded">
+                        <i class="bi bi-receipt text-primary fs-3"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h2 class="mb-0">{{ pedidos_count }}</h2>
+                        <small class="text-muted">Pedidos Hoy</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-warning bg-opacity-10 p-3 rounded">
+                        <i class="bi bi-hourglass-split text-warning fs-3"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h2 class="mb-0">{{ pedidos_activos }}</h2>
+                        <small class="text-muted">Pedidos Activos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-success bg-opacity-10 p-3 rounded">
+                        <i class="bi bi-check-circle text-success fs-3"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h2 class="mb-0">{{ estados_stats.get('Entregado', 0) }}</h2>
+                        <small class="text-muted">Entregados Hoy</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('pedidos.create_pedido') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo Pedido
+                    </a>
+                    <a href="{{ url_for('menu.list_menu') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-book me-2"></i>Ver Menú
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimos Pedidos</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for pedido in ultimos_pedidos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Mesa {{ pedido.mesa.numero }}</strong>
+                            <small class="text-muted ms-2">{{ pedido.fecha.strftime('%H:%M') }}</small>
+                        </div>
+                        <span class="badge bg-{{ pedido.estado.color }}">{{ pedido.estado.nombre }}</span>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-center text-muted">No hay pedidos recientes</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

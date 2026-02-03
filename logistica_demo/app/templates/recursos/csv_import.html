@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Importar CSV - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-upload me-2"></i>Importar {{ entity|capitalize }}</h1>
+        <p class="text-muted">Suba un archivo CSV con las columnas requeridas.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Subir Archivo</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.archivo.label(class="form-label") }}
+                        {{ form.archivo(class="form-control") }}
+                        {% if form.archivo.errors %}
+                        <div class="text-danger small">{{ form.archivo.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="preview" value="1" class="btn btn-outline-primary">
+                            <i class="bi bi-eye me-1"></i>Vista Previa
+                        </button>
+                        {% if preview_data and not preview_data.errors %}
+                        <button type="submit" name="confirmar" value="1" class="btn btn-success">
+                            <i class="bi bi-check-lg me-1"></i>Confirmar Importación
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Columnas Requeridas</h5>
+            </div>
+            <div class="card-body">
+                <code>{{ headers|join(', ') }}</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {% if preview_data %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Vista Previa</h5>
+            </div>
+            <div class="card-body">
+                {% if preview_data.errors %}
+                <div class="alert alert-danger">
+                    <h6>Errores encontrados:</h6>
+                    <ul class="mb-0">
+                        {% for err in preview_data.errors[:10] %}
+                        <li>Fila {{ err.row }}: {{ err.error }}</li>
+                        {% endfor %}
+                        {% if preview_data.errors|length > 10 %}
+                        <li>... y {{ preview_data.errors|length - 10 }} más</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if preview_data.valid_rows %}
+                <h6 class="text-success"><i class="bi bi-check-circle me-1"></i>{{ preview_data.valid_rows|length }}
+                    filas válidas</h6>
+                <div class="table-responsive" style="max-height: 300px;">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                {% for h in headers %}
+                                <th>{{ h }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in preview_data.valid_rows[:10] %}
+                            <tr>
+                                {% for h in headers %}
+                                <td>{{ row.get(h, '') }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Envío {{ envio.codigo }} - Shipping Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>{{ envio.codigo }} <span class="badge bg-{{ envio.estado.color }}">{{ envio.estado.nombre }}</span></h1>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('envios.list_envios') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i>
+            Volver</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">Pedidos en este Envío</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Lugar</th>
+                            <th>Items</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in envio.pedidos %}
+                        <tr>
+                            <td><a href="{{ url_for('pedidos.view_pedido', id=p.id) }}">#{{ p.id }}</a></td>
+                            <td>{{ p.cliente.nombre }}</td>
+                            <td>{{ p.lugar_entrega or '-' }}</td>
+                            <td>{{ p.items|length }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-3">Sin pedidos</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent">
+                <h5>Detalles</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5">Fecha:</dt>
+                    <dd class="col-7">{{ envio.fecha.strftime('%d/%m/%Y %H:%M') }}</dd>
+                    <dt class="col-5">Chofer:</dt>
+                    <dd class="col-7">{{ envio.chofer.nombre if envio.chofer else '-' }}</dd>
+                    <dt class="col-5">Vehículo:</dt>
+                    <dd class="col-7">{{ envio.vehiculo.patente if envio.vehiculo else '-' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
+                <h5>Cambiar Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% for e in estados if e.id != envio.id_estado %}
+                    <form action="{{ url_for('envios.update_estado', id=envio.id, estado_id=e.id) }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-{{ e.color }} w-100">{{ e.nombre }}</button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
