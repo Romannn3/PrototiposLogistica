@@ -17,6 +17,7 @@ Sobre esta base, construí **tres implementaciones** distintas para probar su ve
 ##  El Caso llevado a la realidad: Una aplicacion Web de Logistica
 *Implementación a medida en Producción para empresa de Insumos Agropecuarios.*
 
+
 Esta es la versión más compleja y completa del sistema. Se personalizó el núcleo para resolver problemas de **rutas, vencimientos legales y gestión de flota**.
 
 | Funcionalidad Clave | Solución Técnica |
@@ -27,10 +28,11 @@ Esta es la versión más compleja y completa del sistema. Se personalizó el nú
 | **Documentación** | Sistema de alertas preventivas (Semáforo de vencimientos). |
 
 > **Capturas del Sistema en Producción (Datos a modos de ejemplo):**
->
-> ![Dashboard Logística](link_foto_logistica_1.png) | ![Detalle Camión](link_foto_logistica_2.png)
->
-> *Nota: Se observa la gestión de choferes y estados de viaje.*
+>![Vista General del Sistema](media/menu.png)
+>![Detalle Chofer](media/fichachofer.png) | ![Detalle Cliente](media/fichacliente.png)
+>![Importar CSV](media/importar.png) | ![Exportar CSV](media/exportar.png)
+>![Alertas](media/menualerta.png)
+> *Nota: Se observa la personalización del sistema para la empresa.*
 
 ---
 
@@ -43,8 +45,11 @@ Su objetivo es validar que el núcleo del sistema soporta las relaciones crític
 - **Entidades Core:** Gestión vinculada de `Clientes`, `Productos`, `Pedidos`, `Envíos`, `Choferes` y `Vehículos`.
 - **Versatilidad:** Este modelo de datos sirve como "plantilla en blanco" para iniciar proyectos en empresas de fletes, distribuidoras mayoristas o servicios de entrega, permitiendo escalar las reglas de negocio según la necesidad específica.
 
-> ![Vista General del Modelo](link_foto_envios.png)
+> [Link del prototipo](https://demo-logistica.vercel.app/)
+
+> ![Vista General del Modelo](media/menuLogistica.png)
 > *Vista del panel de administración genérico adaptable a distintos flujos operativos.*
+
 ---
 
 ##  Prototipo B: Gestión Gastronómica
@@ -57,28 +62,17 @@ Utilizando la misma base tecnológica, se adaptaron los modelos de datos para ge
 * **Mesas:** Estado en tiempo real (Libre/Ocupada/Reservada).
 * **Comandas:** Flujo de pedido Cliente -> Cocina -> Entrega.
 
+ [Link del prototipo](https://demo-restaurant-rust.vercel.app/)
+
 > **Capturas del Prototipo:**
 >
-> ![Vista de Mesas](link_foto_resto_1.png) | ![Menú ABM](link_foto_resto_2.png)
+> ![Menu principal](media/menuRestaurant.png) | ![Vista pedido](media/pedidoRestaurant.png)
 >
 > *Aquí se demuestra la flexibilidad del Frontend para adaptarse a una UI de servicio rápido.*
 
 ---
 
-## 3️⃣ Prototipo B: Modelo Logístico Estandarizado (Base Genérica)
-*Estructura fundamental para la administración de transporte y distribución.*
-Este prototipo representa la abstracción pura del negocio logístico. A diferencia de la versión productiva (que tiene reglas complejas del agro), esta instancia implementa el **esquema relacional estándar** aplicable a cualquier organización del rubro.
-
-Su objetivo es validar que el núcleo del sistema soporta las relaciones críticas de cualquier flujo de transporte sin necesidad de modificaciones estructurales:
-
-- **Entidades Core:** Gestión vinculada de `Clientes`, `Productos`, `Pedidos`, `Envíos`, `Choferes` y `Vehículos`.
-- **Versatilidad:** Este modelo de datos sirve como "plantilla en blanco" para iniciar proyectos en empresas de fletes, distribuidoras mayoristas o servicios de entrega, permitiendo escalar las reglas de negocio según la necesidad específica.
-
-> ![Vista General del Modelo](link_foto_envios.png)
-> *Vista del panel de administración genérico adaptable a distintos flujos operativos.*
----
-
-## 🚀 Potencial y Escalabilidad: ¿Qué sigue?
+## Potencial y Escalabilidad
 Esta arquitectura demuestra que, con una base sólida de **Ingeniería de Software**, el costo de desarrollar nuevas soluciones se reduce drásticamente.
 
 ### Hoja de Ruta (Roadmap)
@@ -89,7 +83,7 @@ El sistema está preparado para evolucionar hacia:
 
 ---
 
-## 🛠️ Stack Tecnológico Compartido
+## Stack Tecnológico Compartido
 Todas las implementaciones comparten este ADN técnico, garantizando calidad y seguridad:
 
 * **Core:** Python 3.11 + Flask (Application Factory Pattern).
@@ -99,7 +93,6 @@ Todas las implementaciones comparten este ADN técnico, garantizando calidad y s
 
 ---
 
-### 📬 Contacto
+### Contacto
 **Román Medina Ibarra**
-*Estudiante de Ingeniería en Sistemas | DevSecOps Enthusiast*
-[LinkedIn](LINK) | [Email](mailto:romanmedina016@gmail.com)
+*Estudiante de Ingeniería en Sistemas | [Email](mailto:romanmedina016@gmail.com)
