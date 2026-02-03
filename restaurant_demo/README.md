@@ -31,40 +31,6 @@ app/
 └── static/              # CSS, JS, Images
 ```
 
-## 📦 Instalación
-
-```bash
-# Clonar repositorio
-git clone <repo-url>
-cd restaurant_demo
-
-# Crear entorno virtual
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-# Instalar dependencias
-pip install -r requirements.txt
-
-# Configurar variables de entorno
-cp .env.example .env
-
-# Inicializar base de datos
-python setup_db.py
-
-# Ejecutar aplicación
-python run.py
-```
-
-## 🧪 Testing
-
-```bash
-# Ejecutar tests
-pytest
-
-# Con cobertura
-pytest --cov=app --cov-report=html
-```
 
 ## 🔐 Credenciales Demo
 
@@ -90,6 +56,3 @@ pytest --cov=app --cov-report=html
 - **RBAC** - Control de acceso basado en roles
 - **Repository Pattern** - Abstracción de datos
 
-## 📄 Licencia
-
-MIT License - Proyecto de demostración para portafolio.
